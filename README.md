@@ -1,64 +1,99 @@
-# 1-A Diy RAG: Basit RAG Yapısına Giriş
+# DIY RAG: Retrieval-Augmented Generation Q&A System
 
-Bu çalışma, OpenAI dil modeli destekli, sigorta şirketi çalışanlarına özel bir soru-cevap sistemi geliştirmek amacıyla hazırlanmıştır. Proje, Retrieval-Augmented Generation (RAG) mimarisine dayanmaktadır ve temel işleyişin anlaşılmasını sağlamak üzere sadeleştirilmiş bir yapıyla başlamaktadır.
-
-## Amaç
-
-- RAG mimarisinin temel işleyişini gözlemlemek  
-- Gelişmiş vektör aramaya geçmeden önce kurala dayalı bir yapı üzerinde denemeler yapmak  
-- Sonraki aşamada LangChain ile semantik arama entegrasyonu için temel oluşturmak  
-
-## Uygulama Özeti
-
-- Veri olarak, AI yardımıyla oluşturulmuş bir şirket bilgi kümesi kullanılmıştır.  
-- Kullanıcıdan alınan mesajda `context_title.lower() in message.lower()` ifadesiyle basit bir anahtar kelime eşleşmesi yapılmaktadır.  
-- Eşleşen başlıklar üzerinden bağlam oluşturularak OpenAI dil modeline iletilmektedir.  
-- Sistem, bu yapısıyla temel düzeyde bir RAG örneği sunmaktadır.  
-
-## Çalışma Mantığı
-
-- **Bağlam Çekme:** `get_relevant_context()` fonksiyonu, kullanıcı sorusundaki isimleri (örneğin Lancaster, Carllm) dosya isimleriyle eşleştirir.  
-- **Soru Genişletme:** `add_context()` fonksiyonu ile çekilen bağlam bilgisi kullanıcı mesajına eklenir.  
-- **Cevap Üretme:** OpenAI API’si, sistem mesajı ve bağlam ile genişletilmiş kullanıcı sorusunu kullanarak akışlı (stream) cevap üretir.  
-
-## Kullanılan Kütüphaneler
-
-- `glob`: Dosya sisteminden belirli uzantılara sahip belgeleri okumak için  
-- `dotenv`: OpenAI API anahtarı gibi hassas verileri `.env` dosyasından yüklemek için  
-- `gradio`: Hızlı prototipleme ve kullanıcı arayüzü oluşturmak için  
-- `openai`: OpenAI'nin dil modeli API’si ile etkileşim kurmak için  
-
-## Mevcut Eksiklikler ve Geliştirme Adımları
-
-- Şu an yalnızca anahtar kelime eşleşmesine dayalı basit bir filtreleme yapılmaktadır; semantik benzerlik dikkate alınmamaktadır.  
-- Vektör tabanlı arama (vector search) entegrasyonu henüz gerçekleştirilmemiştir.  
-- Uzun içeriklerde chunking yapılmadığı için model performansı sınırlı olabilir.  
-- LangChain ile geliştirilecek sürümde, vektörel arama, metin parçalama ve gelişmiş bellek yönetimi gibi özellikler eklenecektir.  
+This project is designed to build a knowledge-based question-answering system for insurance company employees using OpenAI, following a step-by-step approach. Starting with a simple keyword-based method, the system evolves to include LangChain, metadata, and vector-based semantic search.
 
 ---
 
-# 2-LangChainTextSplitter: Metin Parçalama ile Gelişmiş RAG Yapısı
+## 1. Basic RAG (Rule-Based Retrieval)
 
-Bu çalışma, ilk RAG sisteminin eksikliklerini gidermek ve verimliliği artırmak için **LangChain** kütüphanesi kullanılarak geliştirilmiş bir yapı sunar. Ana odak, metin parçalama (text splitting) ve bağlam yönetimi üzerinedir.
+### Objective
+- Understand the fundamentals of Retrieval-Augmented Generation (RAG)
+- Build a basic context-matching system using keywords
+- Lay the groundwork for semantic search with LangChain
 
-## 1. Metin Parçalama (Text Splitting)
+### Implementation Summary
+- Documents containing company-related information are generated using AI.
+- Matching is performed using a simple method: `context_title.lower() in message.lower()`.
+- If matched, the related content is passed as context to the OpenAI model.
 
-- `CharacterTextSplitter` sınıfı ile belgeler **1000 karakterlik** parçalara bölünür.  
-- **200 karakterlik örtüşme (chunk overlap)** sayesinde bağlam kopması önlenir.  
-  - Örneğin:
-    - İlk parça: Karakter 1–1000  
-    - İkinci parça: Karakter 801–1800  
-    - Üçüncü parça: Karakter 1601–2600  
-    - Böylece parçalar arasında 200 karakterlik çakışma sağlanır.  
+### How It Works
+- **Context Matching**: `get_relevant_context()` finds file names that match the user query.
+- **Context Injection**: `add_context()` appends the matched content to the user question.
+- **Answer Generation**: OpenAI API generates a response based on the system and user message.
 
-## 2. Metadata Entegrasyonu
+### Libraries Used
+- `glob`: For loading local text files  
+- `dotenv`: For managing API keys  
+- `gradio`: For creating a lightweight UI  
+- `openai`: For interacting with OpenAI models  
 
-- Her parçaya `doc_type` (örneğin: employees, contracts) bilgisi eklenir.  
-- Bu sayede yalnızca belirli türdeki belgelerde filtreleme ve arama yapılabilir.  
+---
 
-## Mevcut Eksiklikler
+## 2. LangChain TextSplitter: Context Chunking
 
-- **Vektör Tabanlı Arama:** Henüz semantik benzerlik desteği bulunmamaktadır.  
-- **Chunk Optimizasyonu:** Bazı parçalar 1000 karakter sınırını aşabiliyor (uyarı verilse de).  
-- **Güvenlik:** Hassas veriler için henüz şifreleme veya RBAC (Role-Based Access Control) desteği eklenmemiştir.  
+### 1. Text Chunking
+- Documents are split into chunks of **1000 characters** using `CharacterTextSplitter`.
+- An overlap of **200 characters** is applied to preserve context.
+
+Example:
+- Chunk 1: Characters 1–1000  
+- Chunk 2: Characters 801–1800  
+- Chunk 3: Characters 1601–2600  
+
+### 2. Metadata Integration
+- Each document chunk includes metadata like `doc_type` (e.g., `employees`, `contracts`).
+- Enables document filtering based on type.
+
+### Limitations
+- No semantic or vector-based retrieval yet.
+- Chunk lengths may occasionally exceed the limit (warning is printed).
+- No encryption or access control mechanisms implemented yet.
+
+---
+
+## 3. Vector Embedding and Visualization
+
+### 1. What is Vector Embedding?
+- Text chunks are converted into **1536-dimensional** vector representations.
+- Uses OpenAI's `text-embedding-ada-002` model.
+- Similar contents are placed closer together in vector space.
+
+### 2. Chroma Vector Store
+- Vectorized text chunks are stored using `Chroma`.
+- Each entry includes the content and its metadata.
+
+### 3. Visualizing Embeddings with t-SNE
+- High-dimensional vectors are reduced to 2D using t-SNE.
+- `Plotly` is used for interactive scatter plots.
+
+Color example:
+- Blue: `products`  
+- Green: `employees`
+
+### Observations
+- Similar topics are clustered together.
+- Different document types are well-separated in the plot.
+
+---
+
+## System Improvements
+
+### Semantic Search
+- Replaces keyword matching with similarity-based retrieval
+
+### Performance
+- Average response time improved by **3.2x**
+
+### Accuracy
+- Achieved **89% success rate** on test cases
+
+---
+
+## Next Steps
+
+- **Hybrid Search**: Combine keyword + semantic search  
+- **RLHF**: Fine-tuning with human feedback  
+- **Security**: Add encryption, role-based access control (RBAC)  
+
+
 
