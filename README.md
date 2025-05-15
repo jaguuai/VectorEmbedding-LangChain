@@ -1,10 +1,10 @@
-# DIY RAG: Retrieval-Augmented Generation Q&A System
+# Retrieval-Augmented Generation Q&A System
 
 This project is designed to build a knowledge-based question-answering system for insurance company employees using OpenAI, following a step-by-step approach. Starting with a simple keyword-based method, the system evolves to include LangChain, metadata, and vector-based semantic search.
 
 ---
 
-## 1. Basic RAG (Rule-Based Retrieval)
+## 1. Basic RAG (Rule-Based Retrieval) 
 
 ### Objective
 - Understand the fundamentals of Retrieval-Augmented Generation (RAG)
