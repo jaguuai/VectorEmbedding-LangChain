@@ -150,33 +150,34 @@ While Chroma provides built-in persistence and is tightly integrated with LangCh
 | Speed                | Moderate                         | High (especially on large sets)  |
 | Integration with LangChain | Native & rich features     | Native but minimal configuration |
 | Ideal For            | Prototyping, lightweight apps    | Production-scale similarity search |
-
 #### Usage Switch Example
 
 - **Chroma Setup**  
- ```python 
-  vectorstore = Chroma.from_documents(
+ 
+```python
+   vectorstore = Chroma.from_documents(
       chunks,
       embedding=embedding_function,
       persist_directory="db"
   )
+  ```
+
 - **FAISS Setup**
- ```python
- vectorstore = FAISS.from_documents(
+```python
+  vectorstore = FAISS.from_documents(
     chunks,
     embedding=embedding_function
 )
+```
 
-**Note:** FAISS vectors are lost when the session ends unless manually serialized using `faiss.write_index(...)`.
+**Note:** FAISS vectors are lost when the session ends unless manually serialized using faiss.write_index(...).
 
 #### Limitations
 - **FAISS** does not natively support persistence in LangChain pipelines.
 - **Chroma** may be slower on very large datasets and lacks the performance tuning capabilities of FAISS.
 
 #### Next Enhancements
-- Implement automatic FAISS saving/loading using `faiss.write_index()` and `faiss.read_index()` methods.
+- Implement automatic FAISS saving/loading using faiss.write_index() and faiss.read_index() methods.
 - Add configuration flags to easily switch between vector store backends via environment variables or command-line options.
 - Explore other vector stores such as **Weaviate**, **Pinecone**, or **Redis** for advanced scalability and performance.
-
-
 
