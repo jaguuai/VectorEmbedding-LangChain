@@ -180,4 +180,31 @@ While Chroma provides built-in persistence and is tightly integrated with LangCh
 - Implement automatic FAISS saving/loading using faiss.write_index() and faiss.read_index() methods.
 - Add configuration flags to easily switch between vector store backends via environment variables or command-line options.
 - Explore other vector stores such as **Weaviate**, **Pinecone**, or **Redis** for advanced scalability and performance.
+## 6. Retrieval Optimization and RAG Debugging
+
+### Objective  
+This stage focuses on enhancing the document retrieval process in the Retrieval-Augmented Generation (RAG) pipeline. By adjusting retrieval parameters such as `k=25`, the system retrieves a broader set of relevant documents, which helps the language model provide more accurate and contextually rich answers. This step also introduces debugging tools to better understand the internal behavior of LangChain components.
+
+### Implementation Summary
+- **Retriever Tuning**  
+  The retriever's `search_kwargs` parameter is adjusted to increase the number of retrieved documents. Increasing `k` from 20 to 25 improves the breadth of context given to the model.
+
+- **LangChain Debugging Tools**  
+  LangChain's built-in tools like `TracingCallbackHandler` and `LangChainTracer` are used to trace the flow of the pipeline, inspect inputs and outputs, and ensure each module behaves as expected.
+
+- **Empirical Testing**  
+  Experiments show that increasing the retrieval depth can enhance response quality, particularly for complex and multi-turn queries.
+
+### Key Highlights
+- Tuned the retriever to retrieve more documents per query
+- Introduced LangChain debugging tools for deeper inspection
+- Compared system behavior across different retrieval depths
+- Prepared the foundation for dynamic tuning and filtering based on metadata
+
+### Benefits
+- Improved contextual coverage in responses
+- Enhanced transparency and traceability of the RAG pipeline
+- Better support for multi-turn, complex question-answering tasks
+- More robust and production-ready retrieval pipeline
+
 
