@@ -87,7 +87,7 @@ Color example:
 ### Accuracy
 - Achieved **89% success rate** on test cases
 
-### 4. LangChain Conversational Retrieval Pipeline (LLM + Memory + Retriever Abstraction)
+### 4. LANGCHAINCONVERSATIONAL RETRIEVAL PIPELINE (LLM + MEMORY + RETRIEVER ABSTRACTIONS)
 
 #### Objective
 This stage introduces a production-grade Retrieval-Augmented Generation (RAG) pipeline using LangChain's modular architecture. The system combines OpenAI's powerful chat models with memory persistence and vector-based document retrieval. It enables multi-turn, context-aware Q&A over internal documents with enhanced semantic understanding.
