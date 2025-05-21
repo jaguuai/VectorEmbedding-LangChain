@@ -128,7 +128,8 @@ This stage introduces a production-grade Retrieval-Augmented Generation (RAG) pi
 - Memory is stored in RAM only (`ConversationBufferMemory`). Persistent memory backends like Neo4j or Redis are not integrated at this stage.
 - No advanced metadata filtering (e.g., doc type or tags) is applied during retrieval.
 - Requires embeddings to be pre-generated and indexed in a compatible vector store (e.g., Chroma).
-- ### 5. Chroma vs FAISS: Switching Vector Stores
+
+### 5. Chroma vs FAISS: Switching Vector Stores
 
 #### Objective
 This section explores how to switch between different vector store backends—specifically **Chroma** and **FAISS**—within the same LangChain RAG pipeline. Both options provide document similarity search capabilities, but they differ in persistence, scalability, and operational behavior. Understanding this switch enables greater flexibility in adapting the system to different environments and performance requirements.
