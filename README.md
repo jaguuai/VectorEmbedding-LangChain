@@ -128,5 +128,54 @@ This stage introduces a production-grade Retrieval-Augmented Generation (RAG) pi
 - Memory is stored in RAM only (`ConversationBufferMemory`). Persistent memory backends like Neo4j or Redis are not integrated at this stage.
 - No advanced metadata filtering (e.g., doc type or tags) is applied during retrieval.
 - Requires embeddings to be pre-generated and indexed in a compatible vector store (e.g., Chroma).
+- ### 5. Chroma vs FAISS: Switching Vector Stores
+
+#### Objective
+This section explores how to switch between different vector store backends—specifically **Chroma** and **FAISS**—within the same LangChain RAG pipeline. Both options provide document similarity search capabilities, but they differ in persistence, scalability, and operational behavior. Understanding this switch enables greater flexibility in adapting the system to different environments and performance requirements.
+
+#### Motivation
+While Chroma provides built-in persistence and is tightly integrated with LangChain, FAISS offers high-speed, in-memory vector search suitable for large-scale datasets. Depending on the use case—development vs. production, RAM-limited systems vs. high-performance servers—choosing the right backend is critical.
+
+#### Implementation Summary
+- Both Chroma and FAISS support the same LangChain retriever interface via `.as_retriever()`.
+- Switching between them involves changing the vector store instantiation line only.
+- FAISS stores everything in memory by default, while Chroma writes vectors to disk using `persist_directory`.
+
+#### Key Differences
+
+| Feature              | Chroma                          | FAISS                           |
+|----------------------|----------------------------------|----------------------------------|
+| Persistence          | Yes (`persist_directory`)        | No (unless manually saved)       |
+| Storage Location     | Disk                             | RAM                              |
+| Speed                | Moderate                         | High (especially on large sets)  |
+| Integration with LangChain | Native & rich features     | Native but minimal configuration |
+| Ideal For            | Prototyping, lightweight apps    | Production-scale similarity search |
+
+#### Usage Switch Example
+
+- **Chroma Setup**  
+ ```python 
+  vectorstore = Chroma.from_documents(
+      chunks,
+      embedding=embedding_function,
+      persist_directory="db"
+  )
+- **FAISS Setup**
+ ```python
+ vectorstore = FAISS.from_documents(
+    chunks,
+    embedding=embedding_function
+)
+> **Note:** FAISS vectors are lost when the session ends unless manually serialized using `faiss.write_index(...)`.
+
+#### Limitations
+- **FAISS** does not natively support persistence in LangChain pipelines.
+- **Chroma** may be slower on very large datasets and lacks the performance tuning capabilities of FAISS.
+
+#### Next Enhancements
+- Implement automatic FAISS saving/loading using `faiss.write_index()` and `faiss.read_index()` methods.
+- Add configuration flags to easily switch between vector store backends via environment variables or command-line options.
+- Explore other vector stores such as **Weaviate**, **Pinecone**, or **Redis** for advanced scalability and performance.
+
 
 
