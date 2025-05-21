@@ -166,7 +166,8 @@ While Chroma provides built-in persistence and is tightly integrated with LangCh
     chunks,
     embedding=embedding_function
 )
-> **Note:** FAISS vectors are lost when the session ends unless manually serialized using `faiss.write_index(...)`.
+
+**Note:** FAISS vectors are lost when the session ends unless manually serialized using `faiss.write_index(...)`.
 
 #### Limitations
 - **FAISS** does not natively support persistence in LangChain pipelines.
