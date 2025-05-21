@@ -87,13 +87,46 @@ Color example:
 ### Accuracy
 - Achieved **89% success rate** on test cases
 
----
+### 4. LangChain Conversational Retrieval Pipeline (LLM + Memory + Retriever Abstraction)
 
-## Next Steps
+#### Objective
+This stage introduces a production-grade Retrieval-Augmented Generation (RAG) pipeline using LangChain's modular architecture. The system combines OpenAI's powerful chat models with memory persistence and vector-based document retrieval. It enables multi-turn, context-aware Q&A over internal documents with enhanced semantic understanding.
 
-- **Hybrid Search**: Combine keyword + semantic search  
-- **RLHF**: Fine-tuning with human feedback  
-- **Security**: Add encryption, role-based access control (RBAC)  
+#### Implementation Summary
+- Chat Model: `ChatOpenAI` is used to power natural conversations.
+- Memory: `ConversationBufferMemory` stores the full dialogue history.
+- Retriever: A vector store (e.g., Chroma) is abstracted via `.as_retriever()` to provide relevant document chunks.
+- Integration: `ConversationalRetrievalChain` combines the LLM, retriever, and memory for a fully functional RAG pipeline.
 
+#### Key Components
+- LLM (Language Model)  
+  OpenAI GPT-4o (or any OpenAI-compatible model) is responsible for generating intelligent, contextual answers.
+
+- Retriever Abstraction  
+  Converts a vector store (like FAISS or Chroma) into a retriever interface compatible with LangChain’s chaining system.
+
+- Conversation Memory  
+  Stores previous turns using `ConversationBufferMemory`, enabling follow-up and contextual continuity.
+
+- Pipeline Composition  
+  `ConversationalRetrievalChain` orchestrates the full flow between input → retrieval → memory → response.
+
+#### Benefits
+- Semantic Relevance  
+  Uses vector similarity instead of simple keyword matching, improving contextual accuracy.
+
+- Contextual Memory  
+  Supports multi-turn conversations with memory of prior queries and responses.
+
+- Modularity  
+  All components (LLM, memory, retriever) are interchangeable and independently upgradable.
+
+- Scalability  
+  Designed for production, supporting large vector databases and high-throughput interactions.
+
+#### Limitations
+- Memory is stored in RAM only (`ConversationBufferMemory`). Persistent memory backends like Neo4j or Redis are not integrated at this stage.
+- No advanced metadata filtering (e.g., doc type or tags) is applied during retrieval.
+- Requires embeddings to be pre-generated and indexed in a compatible vector store (e.g., Chroma).
 
 
